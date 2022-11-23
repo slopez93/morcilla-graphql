@@ -1,7 +1,13 @@
+import { GqlContext } from "../context";
+
 export const resolvers = {
   Query: {
-    async foods() {
-      return Promise.resolve([{ id: "1", name: "food 1", url: "url" }]);
+    async foods(
+      _root: void,
+      _args: void,
+      { services: { foodsService } }: GqlContext
+    ) {
+      return await foodsService.getFoods();
     },
   },
 };

@@ -1,16 +1,27 @@
+import "reflect-metadata";
+
 import { ApolloServer } from "@apollo/server";
-import { startServerAndCreateLambdaHandler } from "@as-integrations/aws-lambda";
+import { expressMiddleware } from "@apollo/server/express4";
+import serverlessExpress from "@vendia/serverless-express";
+import express from "express";
+import { json } from "body-parser";
+import cors from "cors";
+
 import { schema } from "./graphql/schema";
+import { buildContext, GqlContext } from "./graphql/context";
 
-const bootstrap = async () => {
-  // Create GraphQL server
-  const server = new ApolloServer({ schema });
+const server = new ApolloServer<GqlContext>({
+  schema,
+});
 
-  return server;
-};
+server.startInBackgroundHandlingStartupErrorsByLoggingAndFailingAllRequests();
 
-export const graphql = async (event: any, context: any, callback: any) => {
-  const server = await bootstrap();
-
-  return startServerAndCreateLambdaHandler(server)(event, context, callback);
-};
+const app = express();
+app.use(
+  cors(),
+  json(),
+  expressMiddleware(server, {
+    context: buildContext,
+  })
+);
+export const graphql = serverlessExpress({ app });
