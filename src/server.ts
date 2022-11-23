@@ -1,22 +1,8 @@
-import "reflect-metadata";
-
 import { ApolloServer } from "@apollo/server";
 import { startServerAndCreateLambdaHandler } from "@as-integrations/aws-lambda";
-import Container from "typedi";
-import { buildSchema } from "type-graphql";
-import { FoodsResolver } from "./infrastructure/resolvers/FoodsResolver";
-import { registerDependencies } from "./config/di";
-import { ShoppingListResolver } from "./infrastructure/resolvers/ShoppingListResolver";
+import { schema } from "./graphql/schema";
 
 const bootstrap = async () => {
-  const schema = await buildSchema({
-    resolvers: [FoodsResolver, ShoppingListResolver],
-    // register 3rd party IOC container
-    container: Container,
-  });
-
-  registerDependencies(Container);
-
   // Create GraphQL server
   const server = new ApolloServer({ schema });
 
