@@ -5,9 +5,18 @@ export const typeDefs = gql`
     foods: [Food]
   }
 
+  extend type Mutation {
+    food(foodInput: CreateFoodInput!): Food
+  }
+
   type Food {
     id: String
     name: String
-    url: String
+    image: String
+  }
+
+  input CreateFoodInput {
+    name: String!
+    image: String!
   }
 `;

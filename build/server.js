@@ -4,9 +4,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.graphql = void 0;
-// import { ApolloServer } from "@apollo/server";
-// import { startServerAndCreateLambdaHandler } from "@as-integrations/aws-lambda";
-// import { json } from "body-parser";
 require("reflect-metadata");
 const server_1 = require("@apollo/server");
 const express4_1 = require("@apollo/server/express4");
@@ -24,4 +21,5 @@ const app = (0, express_1.default)();
 app.use((0, cors_1.default)(), (0, body_parser_1.json)(), (0, express4_1.expressMiddleware)(server, {
     context: context_1.buildContext,
 }));
+app.listen(3000);
 exports.graphql = (0, serverless_express_1.default)({ app });

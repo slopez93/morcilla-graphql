@@ -1,8 +1,9 @@
 import { mergeSchemas } from "@graphql-tools/schema";
 
-import { foodsSchema } from "./foods";
 import { baseSchema } from "./common";
+import { foodsSchema } from "./foods";
+import { shoppingListSchema } from "./shoppingList";
 
 export const schema = mergeSchemas({
-  schemas: [baseSchema, foodsSchema],
+  schemas: [baseSchema, foodsSchema, shoppingListSchema],
 });

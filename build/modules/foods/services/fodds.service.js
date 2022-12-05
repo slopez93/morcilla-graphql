@@ -5,16 +5,35 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.FOODS_SERVICE = exports.FoodsService = void 0;
 const inversify_1 = require("inversify");
+const FoodsDb_1 = require("../db/FoodsDb");
 let FoodsService = class FoodsService {
-    async getFoods() {
-        return Promise.resolve([{ id: "1", name: "food 100", url: "url" }]);
+    foodsDb;
+    constructor(foodsDb) {
+        this.foodsDb = foodsDb;
     }
+    async getFoods() {
+        try {
+            return await this.foodsDb.getFoods();
+        }
+        catch (error) {
+            console.log(error);
+        }
+    }
+    async addFood({ name, image }) { }
 };
 FoodsService = __decorate([
-    (0, inversify_1.injectable)()
+    (0, inversify_1.injectable)(),
+    __param(0, (0, inversify_1.inject)(FoodsDb_1.FOODS_DB)),
+    __metadata("design:paramtypes", [FoodsDb_1.FoodsDb])
 ], FoodsService);
 exports.FoodsService = FoodsService;
 exports.FOODS_SERVICE = Symbol("FOODS_SERVICE");

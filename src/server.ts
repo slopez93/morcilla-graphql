@@ -24,4 +24,7 @@ app.use(
     context: buildContext,
   })
 );
+
+app.listen(3000);
+
 export const graphql = serverlessExpress({ app });

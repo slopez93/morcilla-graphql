@@ -7,12 +7,21 @@ exports.typeDefs = void 0;
 const graphql_tag_1 = __importDefault(require("graphql-tag"));
 exports.typeDefs = (0, graphql_tag_1.default) `
   extend type Query {
-    foods: [CustomType]
+    foods: [Food]
+  }
+
+  extend type Mutation {
+    food(foodInput: CreateFoodInput!): Food
   }
 
   type Food {
     id: String
     name: String
-    url: String
+    image: String
+  }
+
+  input CreateFoodInput {
+    name: String!
+    image: String!
   }
 `;

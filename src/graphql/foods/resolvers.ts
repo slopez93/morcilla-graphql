@@ -1,4 +1,5 @@
 import { GqlContext } from "../context";
+import { CreateFoodInput } from "./inputs/createFoodInput";
 
 export const resolvers = {
   Query: {
@@ -7,7 +8,24 @@ export const resolvers = {
       _args: void,
       { services: { foodsService } }: GqlContext
     ) {
-      return await foodsService.getFoods();
+      try {
+        return await foodsService.getFoods();
+      } catch (error: any) {
+        throw new Error(error.message);
+      }
+    },
+  },
+  Mutation: {
+    async food(
+      root: void,
+      { foodInput: { name, image } }: CreateFoodInput,
+      { services: { foodsService } }: GqlContext
+    ) {
+      try {
+        return await foodsService.addFood({ name, image });
+      } catch (error: any) {
+        throw new Error(error.message);
+      }
     },
   },
 };
