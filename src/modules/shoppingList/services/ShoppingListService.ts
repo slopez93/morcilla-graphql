@@ -8,8 +8,7 @@ export class ShoppingListService {
   ) {}
 
   public async getShoppingList() {
-    const shoppingList = await this.shoppingListDb.getShoppingList();
-    return shoppingList;
+    return await this.shoppingListDb.getShoppingList();
   }
 }
 

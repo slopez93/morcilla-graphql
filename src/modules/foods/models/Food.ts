@@ -1,5 +1,5 @@
-export interface Food {
-  id: string;
-  name: string;
-  image: string;
+export class Food {
+  public id!: string;
+  public name!: string;
+  public image!: string;
 }

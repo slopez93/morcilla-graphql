@@ -1,11 +1,15 @@
-import { injectable } from "inversify";
+import { inject, injectable } from "inversify";
 import AWS from "aws-sdk";
 import { formatISO } from "date-fns";
 import { ShoppingList } from "../models/ShoppingList";
+import { AUTOMAPPER, AutoMapper } from "../../../shared/automapper";
+import { ShoppingListDto } from "../dtos/ShoppingListDto";
 
 @injectable()
 export class ShoppingListDb {
   private readonly tableName = "Morcilla";
+
+  constructor(@inject(AUTOMAPPER) private automapper: AutoMapper) {}
 
   public async getShoppingList(): Promise<ShoppingList | undefined> {
     const currentDate = formatISO(new Date(), { representation: "date" });
@@ -28,15 +32,7 @@ export class ShoppingListDb {
 
     const dbItem = dbItems.Items[0];
 
-    return {
-      id: dbItem.id,
-      foods: dbItem.foods.map((food: any) => ({
-        id: food.id,
-        name: food.name,
-        image: food.image,
-      })),
-      createdAt: dbItem.createdAt,
-    };
+    return this.automapper.mapper.map(dbItem, ShoppingListDto, ShoppingList);
   }
 }
 

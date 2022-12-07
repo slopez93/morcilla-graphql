@@ -1,10 +1,14 @@
-import { injectable } from "inversify";
+import { inject, injectable } from "inversify";
 import AWS from "aws-sdk";
 import { Food } from "../models/Food";
+import { FoodDto } from "../dtos/FoodDto";
+import { AUTOMAPPER, AutoMapper } from "../../../shared/automapper";
 
 @injectable()
 export class FoodsDb {
   private readonly tableName = "Morcilla";
+
+  constructor(@inject(AUTOMAPPER) private automapper: AutoMapper) {}
 
   public async getFoods(): Promise<Food[]> {
     const dynamoDbConfig = {
@@ -25,14 +29,7 @@ export class FoodsDb {
 
     const dbItem = dbItems.Items;
 
-    return dbItem.map(
-      (item) =>
-        ({
-          id: item.id,
-          name: item.name,
-          image: item.image,
-        } as Food)
-    );
+    return this.automapper.mapper.mapArray(dbItem, FoodDto, Food);
   }
 
   public async create({ id, name, image }: Food) {
