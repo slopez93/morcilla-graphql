@@ -4,6 +4,7 @@ import { formatISO } from "date-fns";
 import { ShoppingList } from "../models/ShoppingList";
 import { AUTOMAPPER, AutoMapper } from "../../../shared/automapper";
 import { ShoppingListDto } from "../dtos/ShoppingListDto";
+import { randomUuuid } from "../../../shared/uuid";
 
 @injectable()
 export class ShoppingListDb {
@@ -33,6 +34,21 @@ export class ShoppingListDb {
     const dbItem = dbItems.Items[0];
 
     return this.automapper.mapper.map(dbItem, ShoppingListDto, ShoppingList);
+  }
+
+  public async save(shoppingList: ShoppingList) {
+    const dynamoDbConfig = {
+      Item: {
+        pk: `SHOPPING_LIST#${shoppingList.createdAt.toISOString()}`,
+        sk: `SHOPPING_LIST#${shoppingList.id}`,
+        id: shoppingList.id,
+        foods: shoppingList.foods,
+        createdAt: shoppingList.createdAt.toISOString(),
+      },
+      TableName: this.tableName,
+    };
+
+    await new AWS.DynamoDB.DocumentClient().put(dynamoDbConfig).promise();
   }
 }
 

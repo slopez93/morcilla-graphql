@@ -32,6 +32,28 @@ export class FoodsDb {
     return this.automapper.mapper.mapArray(dbItem, FoodDto, Food);
   }
 
+  public async getFood(foodId: string) {
+    const dynamoDbConfig = {
+      FilterExpression: "pk = :foodId AND sk = :foodId",
+      ExpressionAttributeValues: {
+        ":foodId": `FOOD#${foodId}`,
+      },
+      TableName: this.tableName,
+    };
+
+    const dbItems = await new AWS.DynamoDB.DocumentClient()
+      .query(dynamoDbConfig)
+      .promise();
+
+    if (!dbItems.Items || dbItems.Items?.length === 0) {
+      return;
+    }
+
+    const dbItem = dbItems.Items[0];
+
+    return this.automapper.mapper.map(dbItem, FoodDto, Food);
+  }
+
   public async create({ id, name, image }: Food) {
     const dynamoDbConfig = {
       Item: {

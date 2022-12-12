@@ -1,4 +1,5 @@
 import { GqlContext } from "../context";
+import { AddFoodToShoppingListInput } from "./inputs/AddFoodToShoppingList";
 
 export const resolvers = {
   Query: {
@@ -12,6 +13,16 @@ export const resolvers = {
       } catch (error: any) {
         throw new Error(error.message);
       }
+    },
+  },
+  Mutation: {
+    async addFoodToShoppingList(
+      _root: void,
+      { foodId }: AddFoodToShoppingListInput,
+      { services: { shoppingListService } }: GqlContext
+    ) {
+      console.log(foodId);
+      return null;
     },
   },
 };
